@@ -1,5 +1,6 @@
 "use client";
 import Head from "next/head";
+import "./globals.css";
 import { useState, useEffect } from "react";
 import BarChart from "./chartsTemplate/BarChart";
 
@@ -20,8 +21,12 @@ export default function Home() {
       <Head>
         <title>Insight And Trends In The US Car Accidents</title>
       </Head>
-      <p>Hello!!!</p>
-      <div id="data-container">{data && <BarChart data={data} />}</div>
+      <div
+        id="data-container"
+        className="flex w-screen h-screen justify-center items-center"
+      >
+        <BarChart data={data} />
+      </div>
     </div>
   );
 }
