@@ -1,13 +1,13 @@
-import BarChart from "../chartsTemplate/BarChart";
+import Map from "../chartsTemplate/Map";
 
-export default function BarChartSection() {
+export default function MapSection() {
   return (
     <div>
       <div
         id="data-container"
         className="flex flex-col w-screen h-screen justify-center items-center"
       >
-        <BarChart />
+        <Map />
       </div>
     </div>
   );
