@@ -2,28 +2,26 @@
 
 import * as d3 from "d3";
 import { useState, useEffect, useRef } from "react";
-import returnStateName from "../../../public/data/stateName";
 
 export default function Map() {
   const [data, setData] = useState(null);
+  const [geoJsonPath, setGeoJsonPath] = useState("/data/us-states.json");
   const svgRef = useRef();
   const tooltipRef = useRef();
-  const stateName = returnStateName();
 
   // Fetch and update data
-  const updateData = async (dataPath) => {
+  const updateData = async () => {
     try {
-      const res = await fetch(dataPath);
+      const res = await fetch("/data/AccidentsByStatesFrom2016To2023.json");
       const jsonData = await res.json();
       setData(jsonData);
     } catch (error) {
-      console.error(`Error fetching data from ${dataPath}:`, error);
+      console.error("Error fetching data:", error);
     }
   };
 
-  // Initial data load
   useEffect(() => {
-    updateData(`/data/AccidentsByStatesFrom2016To2023.json`);
+    updateData();
   }, []);
 
   useEffect(() => {
@@ -39,16 +37,16 @@ export default function Map() {
         .attr("width", width)
         .attr("height", height);
 
-      // Create a tooltip div
       const tooltip = d3.select(tooltipRef.current).style("opacity", 0);
 
       try {
-        const geoData = await d3.json("/data/USGeojson.geojson");
+        const geoData = await d3.json(geoJsonPath);
 
-        // Use Albers USA projection
-        const projection = d3
-          .geoAlbersUsa()
-          .fitSize([width - width / 14, height], geoData);
+        // Clear previous map
+        svg.selectAll("*").remove();
+
+        const projection = d3.geoAlbersUsa().fitSize([width, height], geoData);
+
         const path = d3.geoPath().projection(projection);
 
         svg
@@ -56,38 +54,30 @@ export default function Map() {
           .data(geoData.features)
           .join("path")
           .attr("d", path)
-          .attr("class", "state")
           .attr("fill", (d) => {
-            const state = d.properties.NAME;
-            const value =
-              data[
-                Object.keys(stateName).find((key) => stateName[key] === state)
-              ];
+            const region = d.properties.NAME; // Assumes NAME corresponds to state/county
+            const value = data[region];
             if (value > 0) {
-              // Use a logarithmic scale for balanced steel blue shades
               const logScale = d3
                 .scaleLog()
-                .domain([1, largest]) // Avoid 0 as log(0) is undefined
-                .range(["#ccddf3", "#0b5591"]); // Light steel blue to steel blue
+                .domain([1, largest])
+                .range(["#ddeeff", "#08306b"]);
               return logScale(value);
             }
-            return "lightgray"; // Default color for states with no data
+            return "lightgray";
           })
           .attr("stroke", "white")
-          .attr("stroke-width", 0.5)
+          .attr("stroke-width", 0.3)
           .on("mouseover", (event, d) => {
-            const state = d.properties.NAME;
-            const stateData =
-              data[
-                Object.keys(stateName).find((key) => stateName[key] === state)
-              ];
+            const region = d.properties.NAME;
+            const regionData = data[region];
             tooltip.transition().duration(200).style("opacity", 1);
             const formatNumber = d3.format(",");
 
             tooltip
               .html(
-                `<strong>${state || "Unknown"}</strong><br/>Value: ${
-                  stateData ? formatNumber(stateData) : "N/A"
+                `<strong>${region || "Unknown"}</strong><br/>Value: ${
+                  regionData ? formatNumber(regionData) : "N/A"
                 }`
               )
               .style("left", `${event.pageX + 10}px`)
@@ -107,10 +97,21 @@ export default function Map() {
     };
 
     renderMap();
-  }, [data]);
+  }, [data, geoJsonPath]);
+
+  const toggleGeoJson = () => {
+    setGeoJsonPath((prevPath) =>
+      prevPath.includes("states")
+        ? "/data/us-counties.json"
+        : "/data/us-states.json"
+    );
+  };
 
   return (
     <div>
+      <button onClick={toggleGeoJson}>
+        {geoJsonPath.includes("states") ? "Counties" : "States"}
+      </button>
       <svg ref={svgRef}></svg>
       <div
         ref={tooltipRef}
