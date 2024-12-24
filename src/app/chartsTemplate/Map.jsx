@@ -2,17 +2,22 @@
 
 import * as d3 from "d3";
 import { useState, useEffect, useRef } from "react";
+import returnStateData from "../../../public/data/stateCode";
 
 export default function Map() {
   const [data, setData] = useState(null);
   const [geoJsonPath, setGeoJsonPath] = useState("/data/us-states.json");
   const svgRef = useRef();
   const tooltipRef = useRef();
+  const stateData = returnStateData();
 
-  // Fetch and update data
   const updateData = async () => {
     try {
-      const res = await fetch("/data/AccidentsByStatesFrom2016To2023.json");
+      const dataPath = geoJsonPath.includes("states")
+        ? "/data/AccidentsByStatesFrom2016To2023.json"
+        : "/data/AccidentsByCountiesFrom2016To2023.json";
+
+      const res = await fetch(dataPath);
       const jsonData = await res.json();
       setData(jsonData);
     } catch (error) {
@@ -22,7 +27,7 @@ export default function Map() {
 
   useEffect(() => {
     updateData();
-  }, []);
+  }, [geoJsonPath]);
 
   useEffect(() => {
     const renderMap = async () => {
@@ -42,35 +47,77 @@ export default function Map() {
       try {
         const geoData = await d3.json(geoJsonPath);
 
-        // Clear previous map
         svg.selectAll("*").remove();
 
         const projection = d3.geoAlbersUsa().fitSize([width, height], geoData);
 
         const path = d3.geoPath().projection(projection);
 
+        const colorScale = d3
+          .scaleLog()
+          .domain([1, largest])
+          .range(["#ddeeff", "#08306b"]);
+
         svg
           .selectAll("path")
           .data(geoData.features)
-          .join("path")
-          .attr("d", path)
-          .attr("fill", (d) => {
-            const region = d.properties.NAME; // Assumes NAME corresponds to state/county
-            const value = data[region];
-            if (value > 0) {
-              const logScale = d3
-                .scaleLog()
-                .domain([1, largest])
-                .range(["#ddeeff", "#08306b"]);
-              return logScale(value);
-            }
-            return "lightgray";
-          })
-          .attr("stroke", "white")
-          .attr("stroke-width", 0.3)
+          .join(
+            (enter) =>
+              enter
+                .append("path")
+                .attr("d", path)
+                .attr("fill", "#ddeeff")
+                .attr("stroke", "white")
+                .attr("stroke-width", 0.3)
+                .call((enter) =>
+                  enter
+                    .transition()
+                    .duration(1000)
+                    .attr("fill", (d) => {
+                      const region = d.properties.NAME;
+                      const value = geoJsonPath.includes("counties")
+                        ? data[region]
+                        : (() => {
+                            const state = stateData.states.find(
+                              (s) => s.name === region
+                            );
+                            return state ? data[state.short] : undefined;
+                          })();
+                      return value > 0 ? colorScale(value) : "#ddeeff";
+                    })
+                ),
+            (update) =>
+              update.call((update) =>
+                update
+                  .transition()
+                  .duration(1000)
+                  .attr("fill", (d) => {
+                    const region = d.properties.NAME;
+                    const value = geoJsonPath.includes("counties")
+                      ? data[region]
+                      : (() => {
+                          const state = stateData.states.find(
+                            (s) => s.name === region
+                          );
+                          return state ? data[state.short] : undefined;
+                        })();
+                    return value > 0 ? colorScale(value) : "#ddeeff";
+                  })
+              ),
+            (exit) =>
+              exit.call((exit) =>
+                exit.transition().duration(4000).attr("opacity", 0).remove()
+              )
+          )
           .on("mouseover", (event, d) => {
             const region = d.properties.NAME;
-            const regionData = data[region];
+            const regionData = geoJsonPath.includes("counties")
+              ? data[region]
+              : (() => {
+                  const state = stateData.states.find((s) => s.name === region);
+                  return state ? data[state.short] : undefined;
+                })();
+
             tooltip.transition().duration(200).style("opacity", 1);
             const formatNumber = d3.format(",");
 

@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 US_Accidents_March23.csv
 Preprocess.py
+Preprocess.exe
 # dependencies
 /node_modules
 /.pnp

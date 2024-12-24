@@ -2,13 +2,13 @@
 
 import * as d3 from "d3";
 import { useState, useEffect, useRef } from "react";
-import returnStateName from "../../../public/data/stateName";
+import returnStateData from "../../../public/data/stateCode";
 
 export default function BarChart() {
   const [data, setData] = useState(null);
   const svgRef = useRef();
   const tooltipRef = useRef();
-  const stateName = returnStateName();
+  const stateData = returnStateData();
 
   // Fetch and update data
   const updateData = async (dataPath) => {
@@ -134,7 +134,7 @@ export default function BarChart() {
           .style("opacity", 1)
           .html(
             `<strong>${
-              stateName[dataKeys[index]]
+              stateData[dataKeys[index]]
             }</strong><br>Value: ${formatNumber(d)}`
           );
       })
@@ -180,12 +180,15 @@ export default function BarChart() {
         ref={tooltipRef}
         style={{
           position: "absolute",
-          backgroundColor: "white",
-          border: "1px solid black",
-          padding: "5px",
-          borderRadius: "3px",
+          textAlign: "center",
+          width: "120px",
+          padding: "8px",
+          fontSize: "12px",
+          background: "white",
+          border: "1px solid #ddd",
+          borderRadius: "4px",
           pointerEvents: "none",
-          opacity: 0,
+          boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.1)",
         }}
       ></div>
     </div>
