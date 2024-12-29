@@ -34,3 +34,25 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #888;
 }
+
+.report-container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.report-content {
+  width: 100%;
+}
+
+.tooltip{
+  position: absolute;
+  text-align: center;
+  width: 120px;
+  padding: 8px;
+  font-size: 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  pointer-events: none;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+}

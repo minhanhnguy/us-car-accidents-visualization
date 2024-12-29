@@ -5,53 +5,54 @@ import { useState, useEffect, useRef } from "react";
 import returnStateData from "../../../public/data/stateCode";
 
 export default function BarChart() {
-  const [data, setData] = useState(null);
+  const [chartData, setChartData] = useState(null);
   const svgRef = useRef();
   const tooltipRef = useRef();
-  const stateData = returnStateData();
+  const stateMetadata = returnStateData();
 
-  // Fetch and update data
-  const updateData = async (dataPath) => {
+  // Fetch and update chart data
+  const fetchChartData = async (dataPath) => {
     try {
-      const res = await fetch(`${dataPath}`);
-      const jsonData = await res.json();
-      setData(jsonData);
+      const response = await fetch(dataPath);
+      const jsonData = await response.json();
+      setChartData(jsonData);
     } catch (error) {
-      console.error(`Error fetching data for ${dataPath}:`, error);
+      console.error(`Error fetching data from ${dataPath}:`, error);
     }
   };
 
   // Initial data load
   useEffect(() => {
-    updateData(`/data/AccidentsByStatesFrom2016To2023.json`);
+    fetchChartData(`/data/AccidentsByStatesFrom2016To2023.json`);
   }, []);
 
   useEffect(() => {
-    if (!data) return;
-    const dataValues = Object.values(data);
-    const dataKeys = Object.keys(data);
-    const largest = Math.max(...dataValues);
+    if (!chartData) return;
 
-    const width = Math.max(window.innerWidth * 0.9, 800);
-    const height = Math.max(window.innerHeight * 0.8, 600);
+    const stateNames = Object.keys(chartData);
+    const accidentCounts = Object.values(chartData);
+    const maxAccidentCount = Math.max(...accidentCounts);
 
-    const margin = { top: 20, right: 20, bottom: 60, left: 100 };
+    const svgWidth = Math.max(window.innerWidth * 0.9, 800);
+    const svgHeight = Math.max(window.innerHeight * 0.8, 600);
 
-    const x = d3
+    const margins = { top: 20, right: 20, bottom: 60, left: 100 };
+
+    const xScale = d3
       .scaleBand()
-      .domain(dataKeys)
-      .range([margin.left, width - margin.right])
+      .domain(stateNames)
+      .range([margins.left, svgWidth - margins.right])
       .padding(0.1);
 
-    const y = d3
+    const yScale = d3
       .scaleLinear()
-      .domain([0, largest])
-      .range([height - margin.bottom, margin.top]);
+      .domain([0, maxAccidentCount])
+      .range([svgHeight - margins.bottom, margins.top]);
 
     const svg = d3
       .select(svgRef.current)
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", svgWidth)
+      .attr("height", svgHeight);
 
     // Clear the SVG before rendering
     svg.selectAll("*").remove();
@@ -61,8 +62,8 @@ export default function BarChart() {
     // Add X-axis
     svg
       .append("g")
-      .attr("transform", `translate(0,${height - margin.bottom})`)
-      .call(d3.axisBottom(x).tickSizeOuter(0))
+      .attr("transform", `translate(0,${svgHeight - margins.bottom})`)
+      .call(d3.axisBottom(xScale).tickSizeOuter(0))
       .selectAll("text")
       .attr("transform", "rotate(-45)")
       .style("text-anchor", "end")
@@ -72,45 +73,47 @@ export default function BarChart() {
     // Add Y-axis
     svg
       .append("g")
-      .attr("transform", `translate(${margin.left},0)`)
-      .call(d3.axisLeft(y).ticks(10))
+      .attr("transform", `translate(${margins.left},0)`)
+      .call(d3.axisLeft(yScale).ticks(10))
       .style("font-size", "12px");
 
     // Add bars with transitions
-    const bars = svg.selectAll(".bar").data(dataValues, (_, i) => dataKeys[i]);
+    const bars = svg
+      .selectAll(".bar")
+      .data(accidentCounts, (_, index) => stateNames[index]);
 
     bars.join(
       (enter) =>
         enter
           .append("rect")
           .attr("class", "bar")
-          .attr("x", (_, i) => x(dataKeys[i]))
-          .attr("y", y(0)) // Start from baseline
-          .attr("width", x.bandwidth())
+          .attr("x", (_, index) => xScale(stateNames[index]))
+          .attr("y", yScale(0)) // Start from baseline
+          .attr("width", xScale.bandwidth())
           .attr("height", 0) // Initial height 0
           .style("fill", "#5ba2de")
           .call((enter) =>
             enter
               .transition()
               .duration(500)
-              .attr("y", (d) => y(d))
-              .attr("height", (d) => y(0) - y(d))
+              .attr("y", (d) => yScale(d))
+              .attr("height", (d) => yScale(0) - yScale(d))
           ),
       (update) =>
         update.call((update) =>
           update
             .transition()
             .duration(750)
-            .attr("x", (_, i) => x(dataKeys[i]))
-            .attr("y", (d) => y(d))
-            .attr("height", (d) => y(0) - y(d))
+            .attr("x", (_, index) => xScale(stateNames[index]))
+            .attr("y", (d) => yScale(d))
+            .attr("height", (d) => yScale(0) - yScale(d))
         ),
       (exit) =>
         exit.call((exit) =>
           exit
             .transition()
             .duration(750)
-            .attr("y", y(0))
+            .attr("y", yScale(0))
             .attr("height", 0)
             .remove()
         )
@@ -119,23 +122,25 @@ export default function BarChart() {
     // Add transparent overlays for tooltip interaction
     svg
       .selectAll(".overlay")
-      .data(dataValues)
+      .data(accidentCounts)
       .join("rect")
       .attr("class", "overlay")
-      .attr("x", (_, i) => x(dataKeys[i]))
-      .attr("y", margin.top)
-      .attr("width", x.bandwidth())
-      .attr("height", height - margin.top - margin.bottom)
+      .attr("x", (_, index) => xScale(stateNames[index]))
+      .attr("y", margins.top)
+      .attr("width", xScale.bandwidth())
+      .attr("height", svgHeight - margins.top - margins.bottom)
       .style("fill", "transparent")
       .on("mouseover", function (event, d) {
-        const index = dataValues.indexOf(d);
-        const formatNumber = d3.format(",");
+        const index = accidentCounts.indexOf(d);
+        const formattedNumber = d3.format(",")(d);
+        const stateName = stateMetadata.states.find(
+          (state) => state.short === stateNames[index]
+        )?.name;
+
         tooltip
           .style("opacity", 1)
           .html(
-            `<strong>${
-              stateData[dataKeys[index]]
-            }</strong><br>Value: ${formatNumber(d)}`
+            `<strong>${stateName || stateNames[index]}</strong><br>Accidents: ${formattedNumber}`
           );
       })
       .on("mousemove", function (event) {
@@ -146,15 +151,13 @@ export default function BarChart() {
       .on("mouseout", () => {
         tooltip.style("opacity", 0);
       });
-  }, [data]);
+  }, [chartData]);
 
   return (
     <div>
       <div className="flex w-full mb-4 space-x-[-2px] pl-20">
         <button
-          onClick={() =>
-            updateData(`/data/AccidentsByStatesFrom2016To2023.json`)
-          }
+          onClick={() => fetchChartData(`/data/AccidentsByStatesFrom2016To2023.json`)}
           className="text-black px-4 py-2 rounded"
         >
           Total
@@ -162,14 +165,14 @@ export default function BarChart() {
         {Array.from({ length: 7 }, (_, i) => 2016 + i).map((year) => (
           <button
             key={year}
-            onClick={() => updateData(`/data/AccidentsByStatesIn${year}.json`)}
+            onClick={() => fetchChartData(`/data/AccidentsByStatesIn${year}.json`)}
             className="text-black px-4 py-2 rounded"
           >
             {year}
           </button>
         ))}
         <button
-          onClick={() => updateData(`/data/AccidentsByStatesIn2023.json`)}
+          onClick={() => fetchChartData(`/data/AccidentsByStatesIn2023.json`)}
           className="text-black px-4 py-2 rounded"
         >
           March 2023
@@ -178,18 +181,7 @@ export default function BarChart() {
       <svg ref={svgRef}></svg>
       <div
         ref={tooltipRef}
-        style={{
-          position: "absolute",
-          textAlign: "center",
-          width: "120px",
-          padding: "8px",
-          fontSize: "12px",
-          background: "white",
-          border: "1px solid #ddd",
-          borderRadius: "4px",
-          pointerEvents: "none",
-          boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.1)",
-        }}
+        className="tooltip"
       ></div>
     </div>
   );
