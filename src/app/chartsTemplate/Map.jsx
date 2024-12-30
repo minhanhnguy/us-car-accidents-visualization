@@ -2,7 +2,7 @@
 
 import * as d3 from "d3";
 import { useState, useEffect, useRef } from "react";
-import returnStateData from "../../../public/data/stateCode.jsx";
+import returnStateData from "../../../public/data/stateCode.js";
 
 export default function Map() {
   const [data, setData] = useState(null);
