@@ -2,8 +2,9 @@
 
 import "./globals.css";
 import Head from "next/head";
-import BarChartSection from "./sections/BarChartSection.jsx";
 import MapSection from "./sections/MapSection.jsx";
+import BarChartSection from "./sections/BarChartSection.jsx";
+
 
 export default function Home() {
   return (
