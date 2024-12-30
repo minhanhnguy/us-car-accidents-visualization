@@ -1,4 +1,4 @@
-import Map from "../chartsTemplate/Map";
+import Map from "../chartsTemplate/Map.jsx";
 
 export default function MapSection() {
   return (

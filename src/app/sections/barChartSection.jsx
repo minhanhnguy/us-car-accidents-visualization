@@ -1,4 +1,4 @@
-import BarChart from "../chartsTemplate/BarChart";
+import BarChart from "../chartsTemplate/BarChart.jsx";
 
 export default function BarChartSection() {
   return (
