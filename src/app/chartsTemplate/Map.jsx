@@ -144,14 +144,14 @@ export default function Map() {
             regionData ? formatNumber(regionData) : "N/A"
           }`
         )
-        .style("left", `${event.pageX + 5}px`)
-        .style("top", `${event.pageY - 20}px`);
+        .style("left", `${event.pageX - 100}px`)
+        .style("top", `${event.pageY - 200}px`);
     };
   
     const handleMouseMove = (event) => {
       tooltip
-        .style("left", `${event.pageX + 5}px`)
-        .style("top", `${event.pageY - 20}px`);
+        .style("left", `${event.pageX - 100}px`)
+        .style("top", `${event.pageY - 200}px`);
     };
   
     const handleMouseOut = () => {
