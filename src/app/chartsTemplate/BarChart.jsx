@@ -145,8 +145,8 @@ export default function BarChart() {
       })
       .on("mousemove", function (event) {
         tooltip
-          .style("left", `${event.pageX + 10}px`)
-          .style("top", `${event.pageY - 20}px`);
+          .style("left", `${event.pageX + 5}px`) // Adjust horizontal offset
+          .style("top", `${event.pageY - 20}px`); // Align vertically with cursor
       })
       .on("mouseout", () => {
         tooltip.style("opacity", 0);
@@ -155,10 +155,9 @@ export default function BarChart() {
 
   return (
     <div>
-      <div className="flex w-full mb-4 space-x-[-2px] pl-20">
+      <div className="flex w-full">
         <button
           onClick={() => fetchChartData(`/data/AccidentsByStatesFrom2016To2023.json`)}
-          className="text-black px-4 py-2 rounded"
         >
           Total
         </button>
@@ -166,14 +165,12 @@ export default function BarChart() {
           <button
             key={year}
             onClick={() => fetchChartData(`/data/AccidentsByStatesIn${year}.json`)}
-            className="text-black px-4 py-2 rounded"
           >
             {year}
           </button>
         ))}
         <button
           onClick={() => fetchChartData(`/data/AccidentsByStatesIn2023.json`)}
-          className="text-black px-4 py-2 rounded"
         >
           March 2023
         </button>

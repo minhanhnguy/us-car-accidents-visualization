@@ -5,7 +5,7 @@ export default function BarChartSection() {
     <div>
       <div
         id="data-container"
-        className="flex flex-col w-screen h-screen justify-center items-center"
+        className="flex flex-col w-screen h-screen items-center"
       >
         <BarChart />
       </div>
