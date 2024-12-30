@@ -5,7 +5,7 @@ export default function MapSection() {
     <div>
       <div
         id="data-container"
-        className="flex flex-col w-screen h-screen items-center"
+        className="flex flex-col w-screen items-center"
       >
         <Map />
       </div>

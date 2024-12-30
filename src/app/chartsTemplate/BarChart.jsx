@@ -10,7 +10,6 @@ export default function BarChart() {
   const tooltipRef = useRef();
   const stateMetadata = returnStateData();
 
-  // Fetch and update chart data
   const fetchChartData = async (dataPath) => {
     try {
       const response = await fetch(dataPath);
@@ -54,12 +53,10 @@ export default function BarChart() {
       .attr("width", svgWidth)
       .attr("height", svgHeight);
 
-    // Clear the SVG before rendering
     svg.selectAll("*").remove();
 
     const tooltip = d3.select(tooltipRef.current);
 
-    // Add X-axis
     svg
       .append("g")
       .attr("transform", `translate(0,${svgHeight - margins.bottom})`)
@@ -88,9 +85,9 @@ export default function BarChart() {
           .append("rect")
           .attr("class", "bar")
           .attr("x", (_, index) => xScale(stateNames[index]))
-          .attr("y", yScale(0)) // Start from baseline
+          .attr("y", yScale(0)) 
           .attr("width", xScale.bandwidth())
-          .attr("height", 0) // Initial height 0
+          .attr("height", 0) 
           .style("fill", "#5ba2de")
           .call((enter) =>
             enter
@@ -119,7 +116,6 @@ export default function BarChart() {
         )
     );
 
-    // Add transparent overlays for tooltip interaction
     svg
       .selectAll(".overlay")
       .data(accidentCounts)
@@ -130,7 +126,7 @@ export default function BarChart() {
       .attr("width", xScale.bandwidth())
       .attr("height", svgHeight - margins.top - margins.bottom)
       .style("fill", "transparent")
-      .on("mouseover", function (event, d) {
+      .on("mouseover", function (_, d) {
         const index = accidentCounts.indexOf(d);
         const formattedNumber = d3.format(",")(d);
         const stateName = stateMetadata.states.find(
@@ -145,8 +141,8 @@ export default function BarChart() {
       })
       .on("mousemove", function (event) {
         tooltip
-          .style("left", `${event.pageX + 5}px`) // Adjust horizontal offset
-          .style("top", `${event.pageY - 20}px`); // Align vertically with cursor
+          .style("left", `${event.pageX + 5}px`) 
+          .style("top", `${event.pageY - 20}px`); 
       })
       .on("mouseout", () => {
         tooltip.style("opacity", 0);

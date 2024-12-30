@@ -2,6 +2,7 @@
 US_Accidents_March23.csv
 Preprocess.py
 Preprocess.exe
+.vscode 
 # dependencies
 /node_modules
 /.pnp

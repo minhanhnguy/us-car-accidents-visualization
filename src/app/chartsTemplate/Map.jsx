@@ -39,7 +39,7 @@ export default function Map() {
     return state ? data[state.short] : undefined;
   };
 
-  const renderLegend = (colorScale, canvasHeight, largest, isCounty) => {
+  const renderLegend = (colorScale, canvasHeight) => {
     const legendWidth = 6;
     const legendHeight = canvasHeight / 2;
   
@@ -144,14 +144,14 @@ export default function Map() {
             regionData ? formatNumber(regionData) : "N/A"
           }`
         )
-        .style("left", `${event.pageX - 95}px`)
-        .style("top", `${event.pageY - 180}px`);
+        .style("left", `${event.pageX + 5}px`)
+        .style("top", `${event.pageY - 20}px`);
     };
   
     const handleMouseMove = (event) => {
       tooltip
-        .style("left", `${event.pageX - 95}px`)
-        .style("top", `${event.pageY - 180}px`);
+        .style("left", `${event.pageX + 5}px`)
+        .style("top", `${event.pageY - 20}px`);
     };
   
     const handleMouseOut = () => {
@@ -173,7 +173,7 @@ export default function Map() {
       .on("mousemove", handleMouseMove)
       .on("mouseout", handleMouseOut);
   
-    renderLegend(colorScale, height, largest, isCounty);
+    renderLegend(colorScale, height);
   };
   
 
@@ -218,7 +218,7 @@ export default function Map() {
             backgroundColor: "white",
           }}
         >
-          {geoJsonPath.includes("States") ? "Switch to Counties" : "Switch to States"}
+          {geoJsonPath.includes("States") ? "Switch to County Scale" : "Switch to State Scale"}
         </button>
         <svg ref={svgRef} className="canvas"></svg>
         <div ref={tooltipRef} className="tooltip"></div>
