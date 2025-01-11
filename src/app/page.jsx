@@ -5,7 +5,6 @@ import Head from "next/head";
 import MapSection from "./sections/MapSection.jsx";
 import BarChartSection from "./sections/BarChartSection.jsx";
 
-
 export default function Home() {
   return (
     <div>
@@ -26,16 +25,16 @@ export default function Home() {
           was fortunate to escape with two fractured fingers and a few minor
           injuries. However, the other driver didn't wear seatbelt, flew out of
           the front window of his car and finally succumbed to their injuries at
-          the scene. This deeply impactful experience prompted me, five days
-          later, to write this report analyzing trends in U.S. car accidents
-          from 2016 to March 2023, in an effort to raise awareness about the
-          severity of car incidents in general.
+          the scene. This deeply impactful experience prompted me to write this
+          report analyzing trends five days later about U.S. car accidents from
+          2016 to March 2023, in an effort to raise awareness about the severity
+          of car incidents for the public, and also to remind myself about how
+          dangerous and impactful a driver can become.
         </p>
-        
       </div>
       <MapSection />
       <div className="reportContainer">
-      <p className="reportContent" style={{marginTop: "15px",}}>
+        <p className="reportContent" style={{ marginTop: "15px" }}>
           In the first part of the analysis, a Choropleth Map of the United
           States is used to visually represent car accidents from 2016 to March
           2023. The map employs a logarithmic color-coding scale to illustrate
@@ -65,7 +64,14 @@ export default function Home() {
           higher accident rates.
         </p>
       </div>
-      <hr style={{marginTop: "20px", width: "80%", marginLeft: "auto", marginRight: "auto"}}></hr>
+      <hr
+        style={{
+          marginTop: "20px",
+          width: "80%",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      ></hr>
       <BarChartSection />
     </div>
   );

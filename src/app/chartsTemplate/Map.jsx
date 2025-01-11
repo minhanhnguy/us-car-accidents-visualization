@@ -121,7 +121,7 @@ export default function Map() {
   
     const colorScale = d3
       .scaleLog()
-      .domain([1, isCounty ? largest : largest * 140])
+      .domain([1, isCounty ? largest : largest * 170])
       .range(["#e4fae3", "#0f9908"]);
   
     const zoom = d3.zoom().on("zoom", (event) => {
@@ -144,8 +144,6 @@ export default function Map() {
             regionData ? formatNumber(regionData) : "N/A"
           }`
         )
-        .style("left", `${event.pageX - 100}px`)
-        .style("top", `${event.pageY - 200}px`);
     };
   
     const handleMouseMove = (event) => {

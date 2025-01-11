@@ -55,7 +55,7 @@ export default function BarChart() {
 
     svg.selectAll("*").remove();
 
-    const tooltip = d3.select(tooltipRef.current);
+    const tooltip = d3.select(tooltipRef.current).style("opacity", 0);
 
     svg
       .append("g")
@@ -133,8 +133,9 @@ export default function BarChart() {
           (state) => state.short === stateNames[index]
         )?.name;
 
+        tooltip.transition().duration(200).style("opacity", 1);
+
         tooltip
-          .style("opacity", 1)
           .html(
             `<strong>${stateName || stateNames[index]}</strong><br>Accidents: ${formattedNumber}`
           );
@@ -145,7 +146,7 @@ export default function BarChart() {
           .style("top", `${event.pageY - 20}px`); 
       })
       .on("mouseout", () => {
-        tooltip.style("opacity", 0);
+        tooltip.transition().duration(200).style("opacity", 0);
       });
   }, [chartData]);
 
