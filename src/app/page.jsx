@@ -32,18 +32,18 @@ export default function Home() {
       </div>
       <div className="reportContainer">
         <p className="reportContent">
-          On November 29, 2024, just days after Thanksgiving, I was involved in a
-          devastating car accident while driving back to my dorm. The collision
-          left everyone involved injured. My friends suffered severe injuries,
-          including broken bones and one requiring emergency stomach surgery.
-          I was fortunate to escape with only two fractured fingers and minor
-          scrapes. Tragically, the other driver, who wasn’t wearing a seatbelt,
-          was ejected through the windshield and succumbed to their injuries at
-          the scene. Five days later, from this experience, I began this
-          report to analyze U.S. car accident trends from 2016 to March 2023.
-          My goal is: to raise public awareness about the severity of
-          car accidents and to reflect on the profound responsibility every
-          driver holds.
+          On November 29, 2024, just days after Thanksgiving, I was involved in
+          a devastating car accident while driving back to my dorm. The
+          collision left everyone involved injured. My friends suffered severe
+          injuries, including broken bones and one requiring emergency stomach
+          surgery. I was fortunate to escape with only two fractured fingers and
+          minor scrapes. Tragically, the other driver, who wasn’t wearing a
+          seatbelt, was ejected through the windshield and succumbed to their
+          injuries at the scene. Five days later, from this experience, I began
+          this report to analyze U.S. car accident trends from 2016 to March
+          2023. My goal is: to raise public awareness about the severity of car
+          accidents and to reflect on the profound responsibility every driver
+          holds.
         </p>
       </div>
       <MapSection />
@@ -92,16 +92,15 @@ export default function Home() {
           from 2017 to 2023, with years on the x-axis and accident counts (0 to
           180,000) on the y-axis. Blue data points reveal a steady climb, from
           under 40,000 accidents in 2017 to over 140,000 by 2023. An orange
-          linear regression line, with a slope of 0.756, reinforces this upward
-          trend, suggesting a strong positive correlation between time and
-          accident frequency. While the slope indicates a significant annual
-          increase—potentially around 20,000 additional accidents per year,
-          depending on data scaling—this rise isn’t uniform. Yearly
-          fluctuations appear as outliers above and below the trend line, yet
-          the overall pattern is undeniable: accidents are becoming more
-          frequent. Possible drivers of this trend include growing traffic
-          volumes, population increases, or shifts in road safety practices,
-          all of which merit deeper exploration.
+          linear regression line, with a slope of 0.756, suggesting a strong
+          positive correlation between time and accident frequency. While the
+          slope indicates a significant annual increase—potentially around
+          20,000 additional accidents per year, depending on data scaling—this
+          rise isn’t uniform. Yearly fluctuations appear as outliers above and
+          below the trend line, yet the overall pattern is undeniable: accidents
+          are becoming more frequent. Possible drivers of this trend include
+          growing traffic volumes, population increases, or shifts in road
+          safety practices, all of which merit deeper exploration.
         </p>
       </div>
       <div style={{ height: "15px" }} />
