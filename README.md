@@ -9,5 +9,5 @@ You can access the project here: [Insight and Trends in US Car Accidents](https:
 ## Data Source
 The data for this project is sourced from Kaggle: [US Accidents Dataset](https://www.kaggle.com/datasets/sobhanmoosavi/us-accidents)
 
-For any questions or suggestions, please reach out via [your contact/email].
+For any questions or suggestions, please reach out via minhanguyen2006@gmail.com.
 
