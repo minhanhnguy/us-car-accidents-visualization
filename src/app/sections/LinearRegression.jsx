@@ -77,7 +77,7 @@ const LinearRegression = () => {
 					.on("mouseover", (event, d, i) => {
 						const index = svg.selectAll(".dot").nodes().indexOf(event.target);
 						tooltip.transition().duration(200).style("opacity", 1);
-						tooltip.html(`Date: ${formatDate(dates[index])}<br/>Actual: ${d}`);
+						tooltip.html(`<strong>${formatDate(dates[index])}</strong><br/>Actual: ${d}`);
 					})
 					.on("mousemove", (event) => {
 						tooltip.style("left", `${event.pageX + 5}px`)
@@ -114,7 +114,7 @@ const LinearRegression = () => {
 						const predVal = predictedValues[index];
 						const actualVal = actualValues[index]; // added actual value retrieval
 						tooltip.transition().duration(200).style("opacity", 1);
-						tooltip.html(`Date: ${formatDate(dates[index])}<br/>Predicted: ${predVal.toFixed(2)}<br/>Actual: ${actualVal}`)
+						tooltip.html(`<strong>${formatDate(dates[index])}</strong><br/>Predicted: ${d3.format(",")(predVal.toFixed(2))}<br/>Actual: ${d3.format(",")(actualVal)}`)
 							   .style("left", `${event.pageX + 5}px`)
 							   .style("top", `${event.pageY - 20}px`);
 					})
