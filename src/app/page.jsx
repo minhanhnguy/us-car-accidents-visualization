@@ -39,9 +39,9 @@ export default function Home() {
           I was fortunate to escape with only two fractured fingers and minor
           scrapes. Tragically, the other driver, who wasn’t wearing a seatbelt,
           was ejected through the windshield and succumbed to their injuries at
-          the scene. Five days later, shaken by this experience, I began this
+          the scene. Five days later, from this experience, I began this
           report to analyze U.S. car accident trends from 2016 to March 2023.
-          My goal is twofold: to raise public awareness about the severity of
+          My goal is: to raise public awareness about the severity of
           car accidents and to reflect on the profound responsibility every
           driver holds.
         </p>

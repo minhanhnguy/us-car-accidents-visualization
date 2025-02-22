@@ -126,7 +126,6 @@ const LinearRegression = () => {
 
 	return (
 		<div ref={d3Container} id="data-container" className="flex flex-col w-screen items-center">
-			{/* D3 chart will be rendered here */}
 		</div>
 	);
 };
