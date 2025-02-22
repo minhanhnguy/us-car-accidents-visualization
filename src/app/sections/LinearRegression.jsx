@@ -109,12 +109,12 @@ const LinearRegression = () => {
 					.on("mousemove", function(event) {
 						const [mx] = d3.pointer(event);
 						const x0 = xScale.invert(mx);
-						// Find index using bisector.
 						const bisect = d3.bisector(d => d).left;
 						const index = bisect(dates, x0);
 						const predVal = predictedValues[index];
+						const actualVal = actualValues[index]; // added actual value retrieval
 						tooltip.transition().duration(200).style("opacity", 1);
-						tooltip.html(`Date: ${formatDate(dates[index])}<br/>Predicted: ${predVal.toFixed(2)}`)
+						tooltip.html(`Date: ${formatDate(dates[index])}<br/>Predicted: ${predVal.toFixed(2)}<br/>Actual: ${actualVal}`)
 							   .style("left", `${event.pageX + 5}px`)
 							   .style("top", `${event.pageY - 20}px`);
 					})
