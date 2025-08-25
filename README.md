@@ -6,7 +6,7 @@ This project provides insights and trends regarding car accidents in the United 
 ## Run Project
 
 ```
-git clone 
+git clone https://github.com/minhanhnguy/us-car-accidents-visualization.git
 cd 
 npm install
 npm run dev
